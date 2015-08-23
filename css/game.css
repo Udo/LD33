@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: black;
+  background: rgba(0, 0, 50, 0.75);
   color: rgba(220, 100, 0, 0.75);
+  overflow: hidden;
 }
