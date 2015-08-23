@@ -7,7 +7,7 @@ const Stage = {
   container : null,
   
   update : function() {
-    
+    Unit.updateAll();
   },
   
   render : function() {

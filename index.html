@@ -30,7 +30,10 @@
         'use strict';
         
         UI.init();
-        Unit.make({ type : 'default' });
+        Unit.make({ type : 'location', x : -3, y : -3 });
+        Unit.make({ type : 'location', x : +3, y : -3 });
+        Unit.make({ type : 'location', x : 0, y : +3 });
+        Unit.make({ type : 'default', x : 0, y : 0 });
                   
           
         </script>
