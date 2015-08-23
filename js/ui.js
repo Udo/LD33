@@ -8,6 +8,20 @@ const UI = {
   },
   
   stopped : false,
+
+  Events : {
+    
+    onMouseMove : function(e) {
+      UI.dim.mouseX = e.offsetX;
+      UI.dim.mouseY = e.offsetY;
+      
+    },
+    
+  },
+  
+  installEventHandlers : function() {
+    $(window).on('mousemove', UI.Events.onMouseMove);
+  },
   
   getViewportSize : function() {
 		return({
@@ -21,13 +35,14 @@ const UI = {
     this.renderer = PIXI.autoDetectRenderer(
 			this.size.x, 
 			this.size.y, 
-			{backgroundColor : 0x000000});
+			{backgroundColor : 0x000000, antialias : true });
 		document.body.appendChild(this.renderer.view);
 		$(this.renderer.view)
 		  .css('margin-top', this.dim.marginTop+'px')
 			.css('margin-bottom', this.dim.marginBottom+'px');			
 		Stage.init();
 		this.animationLoop();
+		UI.installEventHandlers();
   },
   
   animationLoop : function() {

@@ -19,17 +19,20 @@
         <script src="js/stage.js"></script>
         <script src="js/ui.js"></script>
         <script src="js/unit.js"></script>
+        <script src="js/tiles.js"></script>
     </head>
     <body>
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         
+        <div id="fps_counter">-</div>
         
         <script>
         'use strict';
         
         UI.init();
+        Tiles.init(15, 15);
         Unit.make({ type : 'location', x : -3, y : -3 });
         Unit.make({ type : 'location', x : +3, y : -3 });
         Unit.make({ type : 'location', x : 0, y : +3 });
@@ -38,7 +41,5 @@
           
         </script>
         
-
-
     </body>
 </html>

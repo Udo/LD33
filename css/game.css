@@ -1,7 +1,14 @@
 body {
   margin: 0;
   padding: 0;
-  background: rgba(0, 0, 50, 0.75);
-  color: rgba(220, 100, 0, 0.75);
+  background: rgba(20, 40, 80, 1);
+  color: rgba(255, 0, 255, 0.75);
   overflow: hidden;
+}
+
+#fps_counter {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 8px;
 }
