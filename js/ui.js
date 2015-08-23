@@ -12,9 +12,10 @@ const UI = {
   Events : {
     
     onMouseMove : function(e) {
-      UI.dim.mouseX = e.offsetX;
-      UI.dim.mouseY = e.offsetY;
-      
+      UI.dim.mouseX = e.offsetX - Stage.container.position.x;
+      UI.dim.mouseY = e.offsetY - Stage.container.position.y;
+      Tiles.mousePos = Tiles.XYToHexY(UI.dim.mouseX, UI.dim.mouseY);
+      Tiles.highlight(Tiles.mousePos);
     },
     
   },
