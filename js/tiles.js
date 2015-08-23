@@ -26,22 +26,33 @@ const Tiles = {
     
     let rowDiv = (y / Tiles.hexDims.rowHeight);
     let row = Math.floor(rowDiv);
-    let rowFraction = (rowDiv - row)*Tiles.hexDims.rowHeight;
+    let rowFraction = (rowDiv - row);
     
     const xOffset = (row % 2) * Tiles.hexDims.beta;
     
     let colDiv = ((x - xOffset) / Tiles.hexDims.colWidth);
     let col = Math.floor(colDiv);
-    let colFraction = (colDiv - col)*Tiles.hexDims.colWidth;
+    let colFraction = (colDiv - col);
     
-    
+    if(rowFraction >= 0.6666) {
+      let invert = (colFraction > 0.5000) ? -((row+1) % 2) : -((row+1) % 2)-1;
+      let inNextHex = 0;
+      if(colFraction < 0.5000)
+        inNextHex = (colFraction) < ((rowFraction - 0.6666) * (Tiles.hexDims.beta/Tiles.hexDims.alpha));
+      else
+        inNextHex = (1-colFraction) < ((rowFraction - 0.6666) * (Tiles.hexDims.beta/Tiles.hexDims.alpha));
+      if(inNextHex) {
+        row += 1;
+        col += invert;
+      }
+    }
     
     return({ x : col, y : row })
   },
   
   drawHex : function(s, color, opacity) {
     
-    const alpha = Stage.gridSize/2;
+    const alpha = Stage.gridSize/1;
     const beta = Math.sqrt(3)*alpha;
     Tiles.hexDims = { alpha : alpha, beta : beta, rowHeight : alpha*3, colWidth : beta*2 };
     
