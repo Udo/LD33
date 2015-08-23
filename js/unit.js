@@ -5,7 +5,19 @@ const UnitHelpers = {
   rect : function(s, color, opacity, x, y, w, h) {
     s.lineStyle(2, color, 1);
     s.beginFill(color, opacity);
-    s.drawRoundedRect(x*Stage.gridSize, y*Stage.gridSize, w*Stage.gridSize, h*Stage.gridSize, 1);
+    s.drawRoundedRect(
+      x*Stage.gridSize-(w*Stage.gridSize/2), 
+      y*Stage.gridSize-(h*Stage.gridSize/2), 
+      w*Stage.gridSize, 
+      h*Stage.gridSize, 
+      1);
+    s.endFill();
+  },
+  
+  circle : function(s, color, opacity, x, y, r) {
+    s.lineStyle(2, color, 1);
+    s.beginFill(color, opacity);
+    s.drawCircle(x*Stage.gridSize, y*Stage.gridSize, r*Stage.gridSize);
     s.endFill();
   },
   
@@ -13,12 +25,16 @@ const UnitHelpers = {
 
 const UnitGraphics = {
   
-  'default' : function(u, s) {
-     UnitHelpers.rect(s, 0xff00ff, 0.25, 0, 0, 1, 1);
+  'default' : function(u) {
+     UnitHelpers.rect(u, 0xff00ff, 0.25, 0, 0, 1, 1);
   },
   
   'location' : function(u, s) {
-     UnitHelpers.rect(s, 0x55ff55, 0.25, 0, 0, 1, 1);
+     UnitHelpers.rect(u, 0x5599ff, 0.25, 0, 0, 1, 1);
+  },
+
+  'combatant' : function(u) {
+     UnitHelpers.circle(u, 0xff0000, 0.25, 0, 0, 0.75);
   },
   
 }
@@ -32,24 +48,28 @@ const Unit = {
   },
   
   update : function(u) {
-    u.sprite.x = Stage.gridSize * u.x;
-    u.sprite.y = Stage.gridSize * u.y;
+    merge(u, Tiles.hexPosToXY(u.gridPos.x, u.gridPos.y));
+  },
+  
+  findByPos : function(x, y) {
+    let result = null;
+    each(Unit.list, function(u) {
+      if(u.gridPos.x == x && u.gridPos.y == y)
+        result = u;
+    });
+    return(result);
   },
   
   make : function(opt) {
-    let newUnit = merge({
-      x : 0, y : 0,
-      }, opt);
-    newUnit.sprite = merge(new PIXI.Graphics(), {
-      
-      });    
-    newUnit.sprite.unit = newUnit; // don't know if we need that yet
-    UnitGraphics[newUnit.type](newUnit, newUnit.sprite);
+    if(!opt.gridPos) opt.gridPos = { x : 0, y : 0 };
+    let newUnit = merge(new PIXI.Graphics(), opt);    
+    UnitGraphics[newUnit.type](newUnit);
+    newUnit.cacheAsBitmap = true;
     Unit.add(newUnit);
   },
   
   add : function(u) {
-    Stage.container.addChild(u.sprite);
+    Stage.container.addChild(u);
     Unit.list.push(u);
   },
   

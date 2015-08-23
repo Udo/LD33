@@ -9,6 +9,8 @@ const UI = {
   
   stopped : false,
 
+  selectionCursor : null,
+  selectionUnit : null,
   Events : {
     
     onMouseMove : function(e) {
@@ -18,10 +20,22 @@ const UI = {
       Tiles.highlight(Tiles.mousePos);
     },
     
+    onClick : function(e) {
+      if(Tiles.mousePos) {
+        UI.selectionCursor.x = Tiles.currentHighlight.x;
+        UI.selectionCursor.y = Tiles.currentHighlight.y;
+        UI.selectionCursor.visible = true;
+        UI.selectedUnit = Unit.findByPos(Tiles.mousePos.x, Tiles.mousePos.y);
+        if(UI.selectedUnit)
+          console.log(UI.selectedUnit.type+' unit', UI.selectedUnit);
+      }
+    },
+    
   },
   
   installEventHandlers : function() {
     $(window).on('mousemove', UI.Events.onMouseMove);
+    $(window).on('click', UI.Events.onClick);
   },
   
   getViewportSize : function() {
@@ -44,6 +58,10 @@ const UI = {
 		Stage.init();
 		this.animationLoop();
 		UI.installEventHandlers();
+		this.selectionCursor = Stage.makeObject(Stage.container, function(s) {
+  		UnitHelpers.circle(s, 0xff00ff, 0.25, 0, 0, 1.2);
+  		s.visible = false;
+		});
   },
   
   animationLoop : function() {

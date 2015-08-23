@@ -6,8 +6,13 @@ const Stage = {
   
   container : null,
   
+  animationList : [],
+  
   update : function() {
     Unit.updateAll();
+    each(Stage.animationList, function(o) {
+      if(o.animationTick) o.animationTick(o);
+    });
   },
   
   render : function() {
@@ -26,6 +31,13 @@ const Stage = {
       });
     Stage.fpsIndicatorElement = $('#fps_counter');
     Stage.fpsIndicatorElement.text('0');
+  },
+  
+  makeObject : function(container, f) {
+    let o = new PIXI.Graphics();
+    f(o);
+    container.addChild(o);
+    return(o);
   },
   
 }

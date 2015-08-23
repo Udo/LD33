@@ -4,18 +4,19 @@ const Tiles = {
   
   list : {},
   
+  normalAlpha : 0.25,
   hexDims : {},
   
   currentHighlight : null,
   highlight : function(pos) {
     if(Tiles.currentHighlight) {
-      Tiles.currentHighlight.tint = 0xffffff;
+      Tiles.currentHighlight.alpha = Tiles.normalAlpha;
       Tiles.currentHighlight.cacheAsBitmap = true;  
     }
     Tiles.currentHighlight = Tiles.list[pos.x+':'+pos.y];
     if(Tiles.currentHighlight) {
       Tiles.currentHighlight.cacheAsBitmap = false;  
-      Tiles.currentHighlight.tint = 0xff0000;
+      Tiles.currentHighlight.alpha = 1.0;
     }
   },
   
@@ -50,9 +51,17 @@ const Tiles = {
     return({ x : col, y : row })
   },
   
+  hexPosToXY : function(xc, yc) {
+    let xOffset = (yc % 2) * Tiles.hexDims.beta;
+    return({
+      x : (xc*Tiles.hexDims.beta*2) + (xOffset), 
+      y : (yc*Tiles.hexDims.alpha*3) + (0) 
+      });
+  },
+  
   drawHex : function(s, color, opacity) {
     
-    const alpha = Stage.gridSize/1;
+    const alpha = Stage.gridSize/2;
     const beta = Math.sqrt(3)*alpha;
     Tiles.hexDims = { alpha : alpha, beta : beta, rowHeight : alpha*3, colWidth : beta*2 };
     
@@ -68,19 +77,17 @@ const Tiles = {
     s.lineStyle(2, color, opacity);
     s.beginFill(color, opacity);
     s.drawPolygon(hexPath);
+    s.alpha = Tiles.normalAlpha;
     s.cacheAsBitmap = true;
     
   },
   
   makeTile : function(xc, yc) {
     
-    let xOffset = (yc % 2) * Tiles.hexDims.beta;
-    
     let tile = merge(Tiles.baseHex.clone(), {
-      x : (xc*Tiles.hexDims.beta*2) + (xOffset), 
-      y : (yc*Tiles.hexDims.alpha*3) + (0), 
       cacheAsBitmap : true,
-      });   
+      alpha : Tiles.normalAlpha,
+      }, Tiles.hexPosToXY(xc, yc));   
 
     Tiles.container.addChild(tile);
     Tiles.list[xc+':'+yc] = tile;
