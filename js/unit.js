@@ -21,6 +21,18 @@ const UnitHelpers = {
     s.endFill();
   },
   
+  addText : function(s, text, color) {
+    let bitmapText = new PIXI.Text(
+      text, {
+        cacheAdBitmap : true,
+        fill : color,
+        font: "15px Courier", align: "center"
+        });
+    bitmapText.pivot.x = (bitmapText.width/2);
+    bitmapText.pivot.y = (bitmapText.height/2);
+    s.addChild(bitmapText);
+  },
+  
 }
 
 const UnitGraphics = {
@@ -35,6 +47,7 @@ const UnitGraphics = {
 
   'combatant' : function(u) {
      UnitHelpers.circle(u, 0xff0000, 0.25, 0, 0, 0.75);
+     UnitHelpers.addText(u, u.stats.designation || '<?>', 0xffffff);
   },
   
 }
@@ -62,6 +75,7 @@ const Unit = {
   
   make : function(opt) {
     if(!opt.gridPos) opt.gridPos = { x : 0, y : 0 };
+    if(!opt.stats) opt.stats = { };
     let newUnit = merge(new PIXI.Graphics(), opt);    
     UnitGraphics[newUnit.type](newUnit);
     newUnit.cacheAsBitmap = true;

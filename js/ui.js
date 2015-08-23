@@ -24,10 +24,13 @@ const UI = {
       if(Tiles.mousePos) {
         UI.selectionCursor.x = Tiles.currentHighlight.x;
         UI.selectionCursor.y = Tiles.currentHighlight.y;
-        UI.selectionCursor.visible = true;
         UI.selectedUnit = Unit.findByPos(Tiles.mousePos.x, Tiles.mousePos.y);
-        if(UI.selectedUnit)
+        if(UI.selectedUnit) {
+          UI.selectionCursor.visible = true;
           console.log(UI.selectedUnit.type+' unit', UI.selectedUnit);
+        } else {
+          UI.selectionCursor.visible = false;
+        }
       }
     },
     
@@ -61,7 +64,12 @@ const UI = {
 		this.selectionCursor = Stage.makeObject(Stage.container, function(s) {
   		UnitHelpers.circle(s, 0xff00ff, 0.25, 0, 0, 1.2);
   		s.visible = false;
+  		s.onRender = function(e, tick) {
+    		e.scale.x = 1.0 + Math.sin(tick/300)*0.10;
+    		e.scale.y = 1.0 + Math.sin(tick/300)*0.10;
+  		}
 		});
+		Stage.animationList.push(this.selectionCursor);
   },
   
   animationLoop : function() {

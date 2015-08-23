@@ -9,18 +9,23 @@ const Stage = {
   animationList : [],
   
   update : function() {
-    Unit.updateAll();
-    each(Stage.animationList, function(o) {
-      if(o.animationTick) o.animationTick(o);
-    });
-  },
-  
-  render : function() {
+    
     const currentTimestamp = new Date().getTime();
     Stage.currentRenderInterval = ((Stage.currentRenderInterval)*0.98)+((currentTimestamp-Stage.lastRenderTimestamp)*0.02);
     Stage.fpsIndicatorElement.text(Math.round(1000/Stage.currentRenderInterval)+'fps');
-    UI.renderer.render(Stage.container);
+
+    Unit.updateAll(currentTimestamp);
+    each(Stage.animationList, function(o) {
+      if(typeof o.onRender == 'function') 
+        o.onRender(o, currentTimestamp);
+    });
+
     Stage.lastRenderTimestamp = currentTimestamp;
+
+  },
+  
+  render : function() {
+    UI.renderer.render(Stage.container);
   },
   
   currentRenderInterval : 10,
